@@ -8,12 +8,13 @@ let path = '/bing/v7.0/search';
 // Azure Blob params
 const storageName = 'instaappstorage';
 const containerName = 'inst-app-container'
+const blobName = 'insta-app-blob.json'
 const azureconnstr = 'DefaultEndpointsProtocol=https;AccountName=instaappstorage;AccountKey=+pWReThloHRPsdhUIxByFMBMUbENjECIZwmKMFXTbQGsRo2ypfRt2r+zpGVAHnlwlP33/g12FoYmosSAohFj/w==;EndpointSuffix=core.windows.net'
 
 var azure = require('azure-storage');
 var blobService = azure.createBlobService(azureconnstr);
 
-const makeSureBlobExists = (guid) => {
+const makeSureBlobExists = () => {
     /*  Goes over blobs and checks if a blob called guid exists.
         If not, creates it. */
     let exists = false;
@@ -21,13 +22,13 @@ const makeSureBlobExists = (guid) => {
     blobService.listBlobsSegmented(containerName, null, (error, results) => {
         if (!error) {
             results.entries.forEach(blob => {
-                if (blob.name === guid + '.json')
+                if (blob.name === blobName)
                     exists = true;
             });
         }
         if (!exists){
             // Create new blob with empty text
-            blobService.createBlockBlobFromText(containerName, guid+'.json', '', (error, result) => {
+            blobService.createBlockBlobFromText(containerName, blobName, '', (error, result) => {
                 if(!error)
                     console.log("New blob created!");
             });
@@ -48,18 +49,18 @@ module.exports = {
         });
     },
 
-    fetchHistory: function (guid) {
+    fetchHistory: function () {
         /*  First make sure that a blob named guid exists, then returns data from it */
-        makeSureBlobExists(guid);
-        return axios.get('https://' + storageName + '.blob.core.windows.net/' + containerName + '/' + guid + '.json')
+        makeSureBlobExists(blobName);
+        return axios.get('https://' + storageName + '.blob.core.windows.net/' + containerName + '/' + blobName)
         .then(function(response) {
             return response.data
         });
     },
 
-    saveHistory: function(guid, history) {
+    saveHistory: function(history) {
         /*  Saves history to blob */
-        blobService.createBlockBlobFromText(containerName, guid + '.json', history.toString(), null, error => {
+        blobService.createBlockBlobFromText(containerName, blobName, history.toString(), null, error => {
             if (error) {
                 console.log(error);
             }

@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import {withCookies, Cookies } from 'react-cookie';
-import uuidv4 from 'uuid/v4';
-import { instanceOf } from 'prop-types';
 
 import './css/App.css';
 import './css/bootstrap.min.css';
@@ -14,9 +11,6 @@ import Result from './components/result';
 var api = require('./utils/api');
 
 class App extends Component {
-  static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
-  };
 
   constructor(props) {
     super(props);
@@ -26,7 +20,7 @@ class App extends Component {
     this.search = this.search.bind(this);
 
     this.state = { 
-      id: '',
+      // id: '',
       link: '',
       term: '',
       searchHistory: undefined
@@ -34,22 +28,22 @@ class App extends Component {
 
   }
 
-  componentWillMount() {
-    // Give each user a container of its own (named uuid).
-    // Save uuid in cookies so we can use it again next time
-    const { cookies } = this.props;
-    const id = cookies.get('id') || '';
+  // componentWillMount() {
+  //   // Give each user a container of its own (named uuid).
+  //   // Save uuid in cookies so we can use it again next time
+  //   const { cookies } = this.props;
+  //   const id = cookies.get('id') || '';
 
-    if (id !== '') {
-      this.setState({id: cookies.get('id')});
-    } 
-    else {
-      // Assign id as doesn't have one saved in cookies.
-      const uuid = uuidv4();
-      cookies.set('id', uuid);
-      this.setState({id: uuid});
-    }
-  }
+  //   if (id !== '') {
+  //     this.setState({id: cookies.get('id')});
+  //   } 
+  //   else {
+  //     // Assign id as doesn't have one saved in cookies.
+  //     const uuid = uuidv4();
+  //     cookies.set('id', uuid);
+  //     this.setState({id: uuid});
+  //   }
+  // }
 
   search(celeb) {
     /* Uses Bing to search for celeb's instagram
@@ -73,7 +67,7 @@ class App extends Component {
 
           this.setState({searchHistory: history.slice()}, () => {
           });
-          api.saveHistory(this.state.id, JSON.stringify(history));
+          api.saveHistory(JSON.stringify(history));
         });
         
       }.bind(this));
@@ -148,7 +142,7 @@ class App extends Component {
             </div>
             <div className="history-table">
               <HistoryTable
-                id = {this.state.id} searchHistory={this.state.searchHistory} onSearchHistory={this.handleHistory}/>
+                searchHistory={this.state.searchHistory} onSearchHistory={this.handleHistory}/>
             </div>
           </div>
           
@@ -158,4 +152,4 @@ class App extends Component {
   }
 }
 
-export default withCookies(App);
+export default App;

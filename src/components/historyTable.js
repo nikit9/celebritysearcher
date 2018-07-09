@@ -13,7 +13,7 @@ class HistoryTable extends Component {
 
     getHistory() {
         /* Uses API to get history from Blob */
-        api.fetchHistory(this.props.id)
+        api.fetchHistory()
         .then(function(response) {
             this.setState(function () {
                 return {
