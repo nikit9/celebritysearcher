@@ -59,11 +59,9 @@ class App extends Component {
         this.setState({link: res, term: celeb}, () => {
           var history;
           if (this.state.searchHistory) {
-            console.log("this.state.searchHistory is true")
             history = this.state.searchHistory.slice();
           }
           else {
-            console.log("in false");
             history = [];
             this.setState({searchHistory: []});
           }
@@ -74,7 +72,6 @@ class App extends Component {
             history.push(addition);
 
           this.setState({searchHistory: history.slice()}, () => {
-            console.log(this.state.searchHistory);
           });
           api.saveHistory(this.state.id, JSON.stringify(history));
         });

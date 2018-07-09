@@ -15,7 +15,6 @@ class HistoryTable extends Component {
         /* Uses API to get history from Blob */
         api.fetchHistory(this.props.id)
         .then(function(response) {
-            console.log(response);
             this.setState(function () {
                 return {
                     currentHistory: response
@@ -27,7 +26,6 @@ class HistoryTable extends Component {
 
     render () {
         if (this.props.searchHistory === undefined || this.props.searchHistory.length === 0){
-            console.log("in if");
             // When checking for the first time searchHistory is undefined, changes to ''.
             this.getHistory();
         }
